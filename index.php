@@ -35,17 +35,6 @@
                             $count += 1;
                             print " value = " . $_POST[$id] . " readonly>";
 
-                            // determining a winner
-                            // FIXME make valid for any # of boxes
-                            // I'm thinking nested for loop 
-                            // outside goes from 1 to (bS*(bS-1))+1 (horizontal) or bS (vertical)
-                            // adds bS (horizontal) or 1 (vertical)
-                            // inside goes from outside val to outside val + bS - 1 (horizontal) or (bS*(bS-1)+outside val
-                            // adds 1 (horizontal) or bS (vertical)
-                            // add each val to array of length w (horizontal) or l (vertical)
-                            // check all values in array match
-                            // no clue what to do for diag yet but dw I'll get it
-
                             // checking horizontal ie lines
                             // this loop goes line by line
                             for($a = 1; $a <= ($boardSize * ($boardSize - 1)) + 1; $a += $boardSize){
@@ -91,6 +80,18 @@
                                 if($weHaveAWinner and $_POST["$a"] == $p1) $p1Wins = true;
                                 elseif($weHaveAWinner and $_POST["$a"] == $p2) $p2Wins = true;
                             }
+
+                            // maybe 1 loop for each of the 2 diagonals?
+                            // backslash wincheck
+                            // start at 1, end at bS*bS
+                            // add bS + 1
+                            // fill array
+                            // do checks
+                            // forward slash wincheck
+                            // start at bS, end at (bS*(bS-1))+1
+                            // add bS - 1
+                            // fill array
+                            // do checks
 
                             // checking diagonals
                             // the tutorial giver typed $c <= 9 and didn't see an issue but I noticed right away
