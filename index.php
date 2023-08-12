@@ -15,6 +15,7 @@
                 $boardSize= 3;
                 $p1 = "x";
                 $p2 = "o";
+                $winArray = array_fill(0, $boardSize, "");
                 $p1Wins = false;
                 $p2Wins = false;
                 $error = false;
@@ -46,21 +47,49 @@
                             // no clue what to do for diag yet but dw I'll get it
 
                             // checking horizontal ie lines
-                            // each round of the for loop checks a whole line at a time
-                            for($a = 1, $b = 2, $c = 3; $a < 7, $b <= 8, $c <= 9; $a += 3, $b += 3, $c += 3){
-                                if($_POST["$a"] == $_POST["$b"] and $_POST["$b"] == $_POST["$c"]){
-                                    if($_POST["$a"] == $p1) $p1Wins = true;
-                                    elseif($_POST["$a"] == $p2) $p2Wins = true;
+                            // this loop goes line by line
+                            for($a = 1; $a <= ($boardSize * ($boardSize - 1)) + 1; $a += $boardSize){
+
+                                // this for loop fills an array with each value in said line
+                                for($b = $a, $increment = 0; $b <= $a + $boardSize - 1, $increment < $boardSize;
+                                $b++, $increment++){
+                                    $winArray[$increment] == $_POST["$b"];
                                 }
+
+                                // check every value of the array against the previous one
+                                // if any 2 don't match, we don't have a winner
+                                $weHaveAWinner = true;
+                                for($c = 1; $c < $boardSize; $c++){
+                                    if($winArray[$c] != $winArray[$c - 1]) $weHaveAWinner = false;
+                                }
+
+                                // if all elements are the same,
+                                // whichever player's value was in the box that the outside loop is looking at wins
+                                if($weHaveAWinner and $_POST["$a"] == $p1) $p1Wins = true;
+                                elseif($weHaveAWinner and $_POST["$a"] == $p2) $p2Wins = true;
                             }
 
                             // checking vertical ie columns
-                            // each round checks a whole column at a time
-                            for($a = 1, $b = 4, $c = 7; $a < 3, $b <= 6, $c <= 9; $a += 1, $b += 1, $c += 1){
-                                if($_POST["$a"] == $_POST["$b"] and $_POST["$b"] == $_POST["$c"]){
-                                    if($_POST["$a"] == $p1) $p1Wins = true;
-                                    elseif($_POST["$a"] == $p2) $p2Wins = true;
+                            // this loop looks at the top of each column
+                            for($a = 1; $a <= $boardSize; $a++){
+
+                                // this for loop fills an array with each value in that column
+                                for($b = $a, $increment = 0; $b <= ($boardSize*($boardSize - 1)) + $a, $increment < $boardSize;
+                                $b += $boardSize, $increment++){
+                                    $winArray[$increment] == $_POST["$b"];
                                 }
+
+                                // check every value of the array against the previous one
+                                // if any 2 don't match, we don't have a winner
+                                $weHaveAWinner = true;
+                                for($c = 1; $c < $boardSize; $c++){
+                                    if($winArray[$c] != $winArray[$c - 1]) $weHaveAWinner = false;
+                                }
+
+                                // if all elements are the same,
+                                // whichever player's value was in the box that the outside loop is looking at wins
+                                if($weHaveAWinner and $_POST["$a"] == $p1) $p1Wins = true;
+                                elseif($weHaveAWinner and $_POST["$a"] == $p2) $p2Wins = true;
                             }
 
                             // checking diagonals
