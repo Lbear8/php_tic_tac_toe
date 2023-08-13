@@ -79,18 +79,6 @@
                                 elseif($weHaveAWinner and $winArray[0] == $p2) $p2Wins = true;
                             }
 
-                            // maybe 1 loop for each of the 2 diagonals?
-                            // backslash wincheck
-                            // start at 1, end at bS*bS
-                            // add bS + 1
-                            // fill array
-                            // do checks
-                            // forward slash wincheck
-                            // start at bS, end at (bS*(bS-1))+1
-                            // add bS - 1
-                            // fill array
-                            // do checks
-
                             // checking diagonals
                             // need to have something to contain the wincheck within a scope, idk exactly how to explain it
                             if(!$p1Wins and !$p2Wins){
