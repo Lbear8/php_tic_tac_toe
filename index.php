@@ -12,7 +12,7 @@
             <?php
                 // here be variables
                 $count = 0;
-                $boardSize= 3;
+                $boardSize= 5;
                 $p1 = "x";
                 $p2 = "o";
                 $winArray = array_fill(0, $boardSize, "");
@@ -42,7 +42,7 @@
                                 // this for loop fills an array with each value in said line
                                 for($b = $a, $increment = 0; $b <= $a + $boardSize - 1, $increment < $boardSize;
                                 $b++, $increment++){
-                                    $winArray[$increment] == $_POST["$b"];
+                                    $winArray[$increment] = $_POST["$b"];
                                 }
 
                                 // check every value of the array against the previous one
@@ -52,10 +52,9 @@
                                     if($winArray[$c] != $winArray[$c - 1]) $weHaveAWinner = false;
                                 }
 
-                                // if all elements are the same,
-                                // whichever player's value was in the box that the outside loop is looking at wins
-                                if($weHaveAWinner and $_POST["$a"] == $p1) $p1Wins = true;
-                                elseif($weHaveAWinner and $_POST["$a"] == $p2) $p2Wins = true;
+                                // if all elements are the same, whichever player's value was in the array wins
+                                if($weHaveAWinner and $winArray[0] == $p1) $p1Wins = true;
+                                elseif($weHaveAWinner and $winArray[0] == $p2) $p2Wins = true;
                             }
 
                             // checking vertical ie columns
@@ -65,7 +64,7 @@
                                 // this for loop fills an array with each value in that column
                                 for($b = $a, $increment = 0; $b <= ($boardSize*($boardSize - 1)) + $a, $increment < $boardSize;
                                 $b += $boardSize, $increment++){
-                                    $winArray[$increment] == $_POST["$b"];
+                                    $winArray[$increment] = $_POST["$b"];
                                 }
 
                                 // check every value of the array against the previous one
@@ -75,10 +74,9 @@
                                     if($winArray[$c] != $winArray[$c - 1]) $weHaveAWinner = false;
                                 }
 
-                                // if all elements are the same,
-                                // whichever player's value was in the box that the outside loop is looking at wins
-                                if($weHaveAWinner and $_POST["$a"] == $p1) $p1Wins = true;
-                                elseif($weHaveAWinner and $_POST["$a"] == $p2) $p2Wins = true;
+                                // if all elements are the same, whichever player's value was in the array wins
+                                if($weHaveAWinner and $winArray[0] == $p1) $p1Wins = true;
+                                elseif($weHaveAWinner and $winArray[0] == $p2) $p2Wins = true;
                             }
 
                             // maybe 1 loop for each of the 2 diagonals?
@@ -94,16 +92,49 @@
                             // do checks
 
                             // checking diagonals
-                            // the tutorial giver typed $c <= 9 and didn't see an issue but I noticed right away
-                            // feels good man
-                            for($a = 1, $b = 5, $c = 9; $a < 3, $b <= 5, $c >= 7; $a += 2, $b += 0, $c -= 2){
-                                if($_POST["$a"] == $_POST["$b"] and $_POST["$b"] == $_POST["$c"]){
-                                    if($_POST["$a"] == $p1) $p1Wins = true;
-                                    elseif($_POST["$a"] == $p2) $p2Wins = true;
-                                }
-                            }
-                        }
+                            // need to have something to contain the wincheck within a scope, idk exactly how to explain it
+                            if(!$p1Wins and !$p2Wins){
 
+                                // this loop fills the array with the back slash values
+                                for($a = 1, $increment = 0; $a <= $boardSize*$boardSize, $increment < $boardSize;
+                                $a += ($boardSize + 1), $increment++){
+                                    $winArray[$increment] = $_POST["$a"];
+                                }
+
+                                // check every value of the array against the previous one
+                                // if any 2 don't match, we don't have a winner
+                                $weHaveAWinner = true;
+                                for($c = 1; $c < $boardSize; $c++){
+                                    if($winArray[$c] != $winArray[$c - 1]) $weHaveAWinner = false;
+                                }
+
+                                // if all elements are the same, whichever player's value was in the array wins
+                                if($weHaveAWinner and $winArray[0] == $p1) $p1Wins = true;
+                                elseif($weHaveAWinner and $winArray[0] == $p2) $p2Wins = true;
+                            }
+
+                            // once again something to contain the wincheck
+                            if(!$p1Wins and !$p2Wins){
+
+                                // this loop fills the array with the forward slash values
+                                for($a = $boardSize, $increment = 0; $a <= ($boardSize*($boardSize - 1)) + 1, $increment < $boardSize;
+                                $a += ($boardSize - 1), $increment++){
+                                    $winArray[$increment] = $_POST["$a"];
+                                }
+
+                                // check every value of the array against the previous one
+                                // if any 2 don't match, we don't have a winner
+                                $weHaveAWinner = true;
+                                for($c = 1; $c < $boardSize; $c++){
+                                    if($winArray[$c] != $winArray[$c - 1]) $weHaveAWinner = false;
+                                }
+
+                                // if all elements are the same, whichever player's value was in the array wins
+                                if($weHaveAWinner and $winArray[0] == $p1) $p1Wins = true;
+                                elseif($weHaveAWinner and $winArray[0] == $p2) $p2Wins = true;
+                            }
+
+                        }
                         // if the input was neither x nor o, or whatever p1 and p2 use
                         else{
                             print ">";
@@ -122,7 +153,7 @@
         <?php
             if($p1Wins) print $p1 . " wins!";
             elseif($p2Wins) print $p2 . " wins!";
-            elseif($count == 9 and !$p1Wins and !$p2Wins) print "It's a draw!";
+            elseif($count == $boardSize*$boardSize and !$p1Wins and !$p2Wins) print "It's a draw!";
             elseif($error) print "Oi! Type " . $p1 . " or " . $p2 . " ONLY!";
             else print "Please enter either " . $p1 . " or " . $p2 . ".";
         ?>
